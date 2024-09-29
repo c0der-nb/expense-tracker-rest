@@ -29,8 +29,8 @@ def get_all_users():
     return User.query.all()
 
 
-def get_a_user(public_id):
-    return User.query.filter_by(public_id=public_id).first()
+def get_a_user(user_id):
+    return User.query.filter_by(id=user_id).first()
 
 def generate_token(user):
     try:
@@ -48,6 +48,33 @@ def generate_token(user):
             'message': 'Some error occurred. Please try again.'
         }
         return response_object, 401
+
+def add_wallet_balance(data, auth_token):
+    try:
+        auth_token = auth_token.split(" ")[1]
+        user_subject = User.decode_auth_token(auth_token)
+        user = User.query.filter_by(id=user_subject).first()
+        if user:
+            user.wallet_balance += data['wallet_balance']
+            db.session.commit()
+            response_obj = {
+                'status': 'success',
+                'message': 'wallet balance successfully updated'
+            }
+            return response_obj, 201
+        response_obj = {
+            'status': 'fail',
+            'message': 'user not found'
+        }
+        return response_obj, 404
+    except Exception as ex:
+        response_obj = {
+            'status': 'fail',
+            'message': 'Something went wrong. Try again later',
+            'error': str(ex)
+        }
+        return response_obj, 500
+
 
 def save_changes(data):
     db.session.add(data)

@@ -2,7 +2,7 @@ from flask import request
 from flask_restx import Resource
 
 from ..util.dto import UserDto
-from ..service.user_service import save_new_user, get_all_users, get_a_user
+from ..service.user_service import save_new_user, get_all_users, get_a_user, add_wallet_balance
 from app.main.util.decorator import token_required
 
 api = UserDto.api
@@ -27,17 +27,28 @@ class UserList(Resource):
         return save_new_user(data=data)
 
 
-@api.route('/<public_id>')
-@api.param('public_id', 'The User identifier')
+@api.route('/<id>')
+@api.param('id', 'The User identifier')
 @api.response(404, 'User not found.')
 class User(Resource):
     @api.doc('get a user')
     @token_required
     @api.marshal_with(_user)
-    def get(self, public_id):
+    def get(self, id):
         """get a user given its identifier"""
-        user = get_a_user(public_id)
+        user = get_a_user(id)
         if not user:
             api.abort(404)
         else:
             return user
+
+@api.route('/wallet_balance')
+@api.response(200, "Wallet balance successfully updated")
+class UserWalletBalance(Resource):
+    @api.doc('add wallet balance')
+    @token_required
+    def post(self):
+        """Add user's wallet balance"""
+        token = request.headers.get("Authorization")
+        data = request.json
+        return add_wallet_balance(data, token)

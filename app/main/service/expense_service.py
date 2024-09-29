@@ -7,6 +7,7 @@ def create_new_expense(auth_token, data):
         auth_token = auth_token.split(" ")[1]
         resp = User.decode_auth_token(auth_token)
         if not isinstance(resp, str):
+            user = User.query.filter_by(id=resp).first()
             new_expense = Expense(
                 user_id = resp,
                 title = data['title'],
@@ -14,6 +15,10 @@ def create_new_expense(auth_token, data):
                 category = data['category'],
                 date = data['date']
             )
+            new_wallet_balance = user.wallet_balance - data['price']
+            if new_wallet_balance < 0:
+                new_wallet_balance = 0
+            user.wallet_balance = new_wallet_balance
             db.session.add(new_expense)
             db.session.commit()
             response_object = {
@@ -64,11 +69,18 @@ def get_expense_by_id(expense_id, auth_token):
 def update_expense(expense_id, data, auth_token):
     try:
         expense = get_expense_by_id(expense_id, auth_token)
+        auth_token = auth_token.split(" ")[1]
+        resp = User.decode_auth_token(auth_token)
         if expense:
+            user = User.query.filter_by(id=resp).first()
             expense.title = data['title']
             expense.price = data['price']
             expense.category = data['category']
             expense.date = data['date']
+            new_wallet_balance = user.wallet_balance - data['price']
+            if new_wallet_balance < 0:
+                new_wallet_balance = 0
+            user.wallet_balance = new_wallet_balance
             db.session.commit()
             response_obj = {
                 'status': 'success',

@@ -7,6 +7,12 @@ from .main.controller.expense_controller import api as expense_ns
 
 blueprint = Blueprint('api', __name__, url_prefix="/api/v1")
 
+@blueprint.after_request 
+def enable_cors(response):
+    header = response.headers
+    header['Access-Control-Allow-Origin'] = '*'
+    return response
+
 api = Api(blueprint,
           title='EXPENSE TRACKER REST API',
           version='1.0',
