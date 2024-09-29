@@ -18,3 +18,13 @@ class AuthDto:
         'password': fields.String(required=True, description='The user password '),
     })
 
+
+class ExpenseDto:
+    api = Namespace('expense', description="expense related operations")
+    expense = api.model('expense', {
+        'id': fields.Integer(description="expense identifier"),
+        'title': fields.String(required=True, description="title of the expense"),
+        'price': fields.Float(required=True, description="cost of the expense"),
+        'category': fields.String(required=True, description="category of the expense"),
+        'date': fields.Date(required=True, description="date at which the expense was made")
+    })

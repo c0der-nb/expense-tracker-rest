@@ -19,7 +19,6 @@ class UserList(Resource):
         return get_all_users()
 
     @api.response(201, 'User successfully created.')
-    @token_required
     @api.doc('create a new user')
     @api.expect(_user, validate=True)
     def post(self):

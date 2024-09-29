@@ -1,7 +1,6 @@
 from app.main.model.user import User
 from ..service.blacklist_service import save_token
 
-
 class Auth:
 
     @staticmethod
@@ -26,10 +25,10 @@ class Auth:
                 return response_object, 401
 
         except Exception as e:
-            print(e)
             response_object = {
                 'status': 'fail',
-                'message': 'Try again'
+                'message': 'Try again',
+                'error': str(e)
             }
             return response_object, 500
 
@@ -62,6 +61,7 @@ class Auth:
         # get the auth token
         auth_token = new_request.headers.get('Authorization')
         if auth_token:
+            auth_token = auth_token.split(" ")[1]
             resp = User.decode_auth_token(auth_token)
             if not isinstance(resp, str):
                 user = User.query.filter_by(id=resp).first()

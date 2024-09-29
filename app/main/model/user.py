@@ -15,7 +15,7 @@ class User(db.Model):
     public_id = db.Column(db.String(100), unique=True)
     name = db.Column(db.String(50), nullable=False)
     password_hash = db.Column(db.String(100))
-    wallet_balance = db.Column(db.Integer, nullable=False)
+    wallet_balance = db.Column(db.Integer, nullable=False, default=5000)
 
     @property
     def password(self):
@@ -55,7 +55,6 @@ class User(db.Model):
         :return: integer|string
         """
         try:
-            auth_token = auth_token.split(" ")[1]
             payload = jwt.decode(auth_token, key, algorithms=["HS256"])
             is_blacklisted_token = BlacklistToken.check_blacklist(auth_token)
             if is_blacklisted_token:

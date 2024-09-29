@@ -13,8 +13,7 @@ def save_new_user(data):
             email=data['email'],
             name=data['name'],
             password=data['password'],
-            registered_on=datetime.datetime.utcnow(),
-            wallet_balance=data['wallet_balance']
+            registered_on=datetime.datetime.utcnow()
         )
         save_changes(new_user)
         return generate_token(new_user)
