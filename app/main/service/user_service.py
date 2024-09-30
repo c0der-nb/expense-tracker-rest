@@ -75,6 +75,22 @@ def add_wallet_balance(data, auth_token):
         }
         return response_obj, 500
 
+def get_wallet_balance(token):
+    try:
+        token = token.split(" ")[1]
+        user_subject = User.decode_auth_token(token)
+        user = User.query.filter_by(id=user_subject).first()
+        response_obj = {
+            "wallet_balance": user.wallet_balance
+        }
+        return response_obj, 200
+    except Exception as ex:
+        response_obj = {
+            'status': 'fail',
+            'message': 'Something went wrong. Try again later',
+            'error': str(ex)
+        }
+    return response_obj, 500
 
 def save_changes(data):
     db.session.add(data)

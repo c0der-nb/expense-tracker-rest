@@ -8,7 +8,7 @@ from app.main.util.decorator import token_required
 api = ExpenseDto.api
 _expense = ExpenseDto.expense
 
-@api.route('/')
+@api.route('')
 class ExpenseList(Resource):
     @api.doc('list all expenses')
     @token_required
