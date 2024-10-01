@@ -22,8 +22,11 @@ def create_new_expense(auth_token, data):
             db.session.add(new_expense)
             db.session.commit()
             response_object = {
-                'status': 'success',
-                'message': 'expense created successfully'
+                'id': new_expense.id,
+                'title': new_expense.title,
+                'price': new_expense.price,
+                'category': new_expense.category,
+                'date': str(new_expense.date)
             }
             return response_object, 201
         response_object = {

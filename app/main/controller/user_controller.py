@@ -8,7 +8,6 @@ from app.main.util.decorator import token_required
 api = UserDto.api
 _user = UserDto.user
 
-
 @api.route('')
 class UserList(Resource):
     @api.doc('list_of_registered_users')

@@ -9,7 +9,7 @@ from app import blueprint
 
 app = create_app(os.getenv('EXPENSE_TRACKER_ENV') or 'dev')
 
-@app.after_request 
+@app.after_request
 def after_request(response):
     header = response.headers
     header['Access-Control-Allow-Origin'] = '*'
