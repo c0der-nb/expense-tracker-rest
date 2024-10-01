@@ -94,7 +94,7 @@ def update_expense(expense_id, data, auth_token):
             'status': 'fail',
             'message': "Expense doesn't exists."
         }
-        return response_obj, 4044
+        return response_obj, 404
 
     except Exception as ex:
         response_obj = {
