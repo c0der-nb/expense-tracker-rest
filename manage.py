@@ -1,6 +1,7 @@
 import os
 import unittest
 
+from sqlalchemy.sql import text
 from flask_migrate import Migrate
 
 from app.main import create_app, db
@@ -21,9 +22,17 @@ app.url_map.strict_slashes = False
 
 app.register_blueprint(blueprint)
 
-app.app_context().push()
-
 migrate = Migrate(app, db)
+
+with app.app_context():
+    db.create_all()
+    if not db.session.execute(text('SELECT 1 FROM alembic_version')).fetchone():
+        print("Applying database migrations...")
+        with app.app_context():
+            migrate.upgrade()
+
+
+app.app_context().push()
 
 
 def run():
