@@ -28,10 +28,6 @@ with app.app_context():
 
 app.app_context().push()
 
-
-def run():
-    app.run()
-
 def test():
     """Runs the unit tests."""
     tests = unittest.TestLoader().discover('app/test', pattern='test*.py')
@@ -41,4 +37,9 @@ def test():
     return 1
 
 if __name__ == '__main__':
-    run()
+    env = os.getenv('EXPENSE_TRACKER_ENV', 'dev')
+    if env == 'prod':     
+        from waitress import serve
+        serve(app, host="0.0.0.0", port=8080)
+    else:
+        app.run()

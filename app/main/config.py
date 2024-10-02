@@ -1,6 +1,7 @@
 import os
 
-postgres_local_base = os.environ.get("EXPENSE_DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/expense_db")
+postgres_local_base = "postgresql://postgres:postgres@localhost:5432/expense_db"
+prod_db_url = os.getenv("EXPENSE_DATABASE_URL")
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -25,7 +26,7 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = postgres_local_base
+    SQLALCHEMY_DATABASE_URI = prod_db_url
 
 
 config_by_name = dict(
