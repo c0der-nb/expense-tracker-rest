@@ -23,7 +23,7 @@ class ExpenseList(Resource):
     @token_required
     @api.expect(_expense, validate=True)
     def post(self):
-        """Creates a new User """
+        """Creates a new expense """
         data = request.json
         token = request.headers.get("Authorization")
         return create_new_expense(auth_token=token,data=data)
